@@ -1,0 +1,1 @@
+"""Main LogGroupPermissionsDemo package."""
