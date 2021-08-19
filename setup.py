@@ -27,6 +27,9 @@ setuptools.setup(
     install_requires=[
         "python-dotenv==0.17.0",
         "stringcase==1.2.0",
+        f"aws-cdk.aws-iam=={CDK_VERSION}",
+        f"aws-cdk.aws-lambda=={CDK_VERSION}",
+        f"aws-cdk.aws-logs=={CDK_VERSION}",
         f"aws-cdk.core=={CDK_VERSION}",
     ],
     python_requires=">=3.7",
