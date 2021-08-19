@@ -22,18 +22,11 @@ class LogGroupPermissionsDemoStack(core.Stack):
     ) -> None:
         """Construct a new LogGroupPermissionsDemoStack."""
         super().__init__(scope, construct_id, **kwargs)
+
         role = iam.Role(
             scope=self,
             id="Role",
             assumed_by=iam.ServicePrincipal("lambda.amazonaws.com"),
-        )
-
-        role.add_to_policy(
-            iam.PolicyStatement(
-                actions=["logs:PutLogEvents", "logs:CreateLogStream"],
-                effect=iam.Effect.ALLOW,
-                resources=["*"],
-            )
         )
 
         function = lambda_.Function(
@@ -44,3 +37,16 @@ class LogGroupPermissionsDemoStack(core.Stack):
             handler="index.handler",
             role=role,
         )
+        
+        statement = iam.PolicyStatement(
+                actions=["logs:PutLogEvents", "logs:CreateLogStream"],
+                effect=iam.Effect.ALLOW,
+                resources=[
+                    f'arn:aws:logs:{self.region}:{self.account}:log-group:/aws/lambda/{function.function_name}:log-stream:*'],
+        )
+        
+        log_policy = iam.Policy(
+            scope=self, id='Policy',
+            document=iam.PolicyDocument(statements=[statement])
+        )
+        log_policy.attach_to_role(role)
